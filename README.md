@@ -17,6 +17,7 @@ Usage:
 
 
 Additional details on Usage:
+
 1. Checks out CMSSW, downloads needed packages, and compiles everything
 into a working environment. A log file for stdout is produced (default:
 setup.log).
