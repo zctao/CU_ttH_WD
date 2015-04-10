@@ -24,6 +24,8 @@ START_DIR=${PWD}
 if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; then
 	cd ${CMSSW_BASE}/src
 	
+	CLEAN_BUILD=False
+	
 	#######################
 	## Analyzers
 	#######################
@@ -34,7 +36,12 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 	fi
 
 	if [ -d "${CMSSW_BASE}/src/Analyzers" ]; then
-		echo "${CMSSW_BASE}/src/Analyzers is set."
+		echo "${CMSSW_BASE}/src/Analyzers was set. Updating."
+		cd ${CMSSW_BASE}/src/Analyzers
+		git pull
+		cd ${CMSSW_BASE}/src
+		
+		CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/Analyzers is NOT set." 1>&2
 	fi
@@ -50,7 +57,12 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 	fi
 
 	if [ -d "${CMSSW_BASE}/src/MiniAOD" ]; then
-		echo "${CMSSW_BASE}/src/MiniAOD is set."
+		echo "${CMSSW_BASE}/src/MiniAOD is set. Updating."
+		cd ${CMSSW_BASE}/src/MiniAOD
+		git pull
+		cd ${CMSSW_BASE}/src
+		
+		CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/MiniAOD is NOT set." 1>&2
 	fi
@@ -66,11 +78,20 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 	fi
 
 	if [ -d "${CMSSW_BASE}/src/BoostedTTH" ]; then
-		echo "${CMSSW_BASE}/src/BoostedTTH is set."
+		echo "${CMSSW_BASE}/src/BoostedTTH is set. Updating."
+		cd ${CMSSW_BASE}/src/BoostedTTH
+		git pull
+		cd ${CMSSW_BASE}/src
+		
+		CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/BoostedTTH is NOT set." 1>&2
 	fi
 	
+	
+	if [ ${CLEAN_BUILD} ]; then
+		scram b clean
+	fi
 	
 	scram b -j 24
 	cd ${START_DIR}
