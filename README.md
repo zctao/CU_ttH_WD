@@ -5,24 +5,31 @@
 #
 
 
-Usage:
+Setup usage:
 
-1. Load the packages and CMS environment (in bash):
+* Load the packages and the CMS SW environment (in bash):
 
-	$. setup.sh
+	$. setup.sh TASK
 
-2. Run the analyzer (a particular CMSSW package checked out with 1.):
+
+Additional details on Setup usage:
+
+* Checks out CMSSW, downloads needed packages, and compiles everything
+into a working environment. A log file for stdout is produced (default:
+setup.log). If no TASK has been provided, a list of choices will be
+printed out.
+
+
+Analyzer usage (after ". setup.sh analyzer"):
+
+* Run the analyzer (a particular CMSSW package):
 
 	$. run_analyzer.sh
 
 
-Additional details on Usage:
+Additional details on Analyzer usage:
 
-1. Checks out CMSSW, downloads needed packages, and compiles everything
-into a working environment. A log file for stdout is produced (default:
-setup.log).
-
-2. An analyzer is a particular CMSSW plugin that has dependencies on
+* An analyzer is a particular CMSSW plugin that has dependencies on
 several other shared and nonshared libraries. It is suppose to have
 dependencies on Configs, Inputs, and produce results in Outputs directories.
 A log file for stdout&stderr is produced (default: run_analyzer.log).

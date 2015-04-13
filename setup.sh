@@ -19,8 +19,32 @@ START_DIR=${PWD}
 ## Script's execution code
 ##########################
 
-. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
-. Setup_modules/setup_packages_CMSSW.sh >> ${LOG_FILENAME}
+if [ "$@" = "analyzer" ]; then
+	
+	echo "Setting up an analyzer"
+	. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
+	. Setup_modules/setup_packages_CMSSW.sh >> ${LOG_FILENAME}
+	
+	cp Utilities/analyzer/run_analyzer.sh .
+	
+	## Prepare GRID environment
+	voms-proxy-init -voms cms
+elif [ "$@" = "environment" ]; then
+	
+	echo "Setting up an environment"
+	. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
+	
+	## Prepare GRID environment
+	voms-proxy-init -voms cms
+elif [ "$@" = "dummy" ]; then
+	
+	echo "A dummy placeholder."
+else
+	
+	echo "Current choices are:"
+	echo "analyzer environment dummy"
+fi
+
 #. Setup_modules/setup_YAML.sh >> ${LOG_FILENAME}
 
 # # Make a portable archive for batch submissions
@@ -38,7 +62,3 @@ START_DIR=${PWD}
 # 	cd ${START_DIR}
 # 	mv ${CMSSW_BASE}/CMSSW_portable_full.tar.gz .
 # fi
-
-
-## Prepare GRID environment
-voms-proxy-init -voms cms
