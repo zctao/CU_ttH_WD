@@ -24,7 +24,7 @@ START_DIR=${PWD}
 if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; then
 	cd ${CMSSW_BASE}/src
 	
-	CLEAN_BUILD=False
+	MAKE_CLEAN_BUILD=False
 	
 	#######################
 	## Analyzers
@@ -41,7 +41,7 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		git pull
 		cd ${CMSSW_BASE}/src
 		
-		CLEAN_BUILD=True
+		MAKE_CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/Analyzers is NOT set." 1>&2
 	fi
@@ -62,7 +62,7 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		git pull
 		cd ${CMSSW_BASE}/src
 		
-		CLEAN_BUILD=True
+		MAKE_CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/MiniAOD is NOT set." 1>&2
 	fi
@@ -83,13 +83,13 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		git pull
 		cd ${CMSSW_BASE}/src
 		
-		CLEAN_BUILD=True
+		MAKE_CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/BoostedTTH is NOT set." 1>&2
 	fi
 	
 	
-	if [ ${CLEAN_BUILD} ]; then
+	if [ ${MAKE_CLEAN_BUILD} ]; then
 		scram b clean
 	fi
 	

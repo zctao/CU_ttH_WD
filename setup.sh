@@ -19,7 +19,9 @@ START_DIR=${PWD}
 ## Script's execution code
 ##########################
 
-if [ "$@" = "analyzer" ]; then
+TASK="$@"
+
+if [ "${TASK}" = "analyzer" ]; then
 	
 	echo "Setting up an analyzer"
 	. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
@@ -29,14 +31,14 @@ if [ "$@" = "analyzer" ]; then
 	
 	## Prepare GRID environment
 	voms-proxy-init -voms cms
-elif [ "$@" = "environment" ]; then
+elif [ "${TASK}" = "environment" ]; then
 	
 	echo "Setting up an environment"
 	. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
 	
 	## Prepare GRID environment
 	voms-proxy-init -voms cms
-elif [ "$@" = "dummy" ]; then
+elif [ "${TASK}" = "dummy" ]; then
 	
 	echo "A dummy placeholder."
 else

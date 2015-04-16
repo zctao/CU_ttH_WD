@@ -14,6 +14,7 @@
 
 SCRAM_ARCH_VER_CHOICE=slc6_amd64_gcc481
 CMSSW_VER_CHOICE=CMSSW_7_2_4
+START_DIR=${PWD}
 
 
 ## Script's execution code
@@ -29,7 +30,7 @@ if command -v scram > /dev/null 2>&1; then
 			# Try using an existing CMSSW area
 			cd ${CMSSW_VER_CHOICE}/src/
 			cmsenv
-			cd ../../
+			cd ${START_DIR}
 		else
 			# Try getting a new CMSSW area
 			export SCRAM_ARCH=${SCRAM_ARCH_VER_CHOICE}
@@ -37,7 +38,7 @@ if command -v scram > /dev/null 2>&1; then
 			scram project ${CMSSW_VER_CHOICE}
 			cd ${CMSSW_VER_CHOICE}/src/
 			cmsenv
-			cd ../../
+			cd ${START_DIR}
 		fi
 		
 		# At this point CMSSW should be fine. Let us check.
