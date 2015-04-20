@@ -11,7 +11,7 @@ START_DIR=${PWD}
 ## Script's execution code
 ##########################
 
-cd ${CMSSW_BASE}
+cd ${CMSSW_BASE}/src
 
 scram b clean > ${START_DIR}/${LOG_FILENAME}
 scram b -j 24 >> ${START_DIR}/${LOG_FILENAME}

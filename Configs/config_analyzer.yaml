@@ -1,0 +1,35 @@
+## Generic parameters used in analyzer
+Generic:
+    HLT_config_tag: 'HLT'
+    filter_config_tag: 'PAT'
+    verbosity: false
+    # Prints events' triggers. Depends on verbosity
+    print_HLT_event_path: false
+
+
+## Triggers to fire upon
+Triggers:
+    # SINGLE TRIGGER FOR NOW. List of electron triggers
+    HLT_electron_triggers: 'HLT_Ele27_eta2p1_WP85_Gsf_v1'
+    # SINGLE TRIGGER FOR NOW. List of muon triggers
+    HLT_muon_triggers: 'HLT_IsoMu24_eta2p1_IterTrk02_v1'
+
+
+## Event cuts
+Cuts:
+    # lower cut for e and mu pT
+    min_tight_lepton_pT: 20
+
+
+## Jets' specifics
+Jets:
+    jet_corrector: 'ak4PFchsL1L2L3'
+
+
+## Parameters for miniAODhelper class
+miniAODhelper_parameters:
+    # choices: 'lepton+jet', 'dilepton', 'taus_lepton+jet', 'taus_dilepton'
+    analysis_type: 'lepton+jet'
+    using_real_data: false
+
+
