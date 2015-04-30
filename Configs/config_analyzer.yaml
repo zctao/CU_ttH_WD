@@ -1,24 +1,48 @@
 ## Generic parameters used in analyzer
 Generic:
+    # choices: 'lepton+jet', 'dilepton', 'taus_lepton+jet', 'taus_dilepton'
+    analysis_type: 'dilepton'
     HLT_config_tag: 'HLT'
     filter_config_tag: 'PAT'
     verbosity: false
-    # Prints events' triggers. Depends on verbosity
+    # Prints events' triggers. Depends on verbosity and collect_trigger_stats
     print_HLT_event_path: false
 
 
 ## Triggers to fire upon
 Triggers:
-    # SINGLE TRIGGER FOR NOW. List of electron triggers
-    HLT_electron_triggers: 'HLT_Ele27_eta2p1_WP85_Gsf_v1'
-    # SINGLE TRIGGER FOR NOW. List of muon triggers
-    HLT_muon_triggers: 'HLT_IsoMu24_eta2p1_IterTrk02_v1'
+    # Performs unnecessary loops to collect all trigger data
+    collect_trigger_stats: false
+    ## Single lepton triggers:
+    # List of single electron triggers.
+    HLT_electron_triggers: [
+'HLT_Ele27_eta2p1_WP85_Gsf_v1']
+    # List of single muon triggers.
+    HLT_muon_triggers: [
+'HLT_IsoMu24_eta2p1_IterTrk02_v1']
+    ## Dilepton triggers:
+    # List of dielectron triggers. 
+    HLT_electron_electron_triggers: [
+'HLT_Ele23_Ele12_CaloId_TrackId_Iso_v1']
+    # List of electron + muon triggers. 
+    HLT_electron_muon_triggers: [
+'HLT_Mu23_TrkIsoVVL_Ele12_Gsf_CaloId_TrackId_Iso_MediumWP_v1',
+'HLT_Mu8_TrkIsoVVL_Ele23_Gsf_CaloId_TrackId_Iso_MediumWP_v1']
+    # List of dimuon triggers. 
+    HLT_muon_muon_triggers: [
+'HLT_Mu30_TkMu11_v1',
+'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v1',
+'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v1']
 
 
 ## Event cuts
 Cuts:
     # lower cut for e and mu pT
     min_tight_lepton_pT: 20
+    # lower cut for jet pT, jets after corrections
+    min_jet_pT: 25
+    # upper cut for jet |eta| angle
+    max_jet_eta: 2.4
 
 
 ## Jets' specifics
@@ -28,8 +52,8 @@ Jets:
 
 ## Parameters for miniAODhelper class
 miniAODhelper_parameters:
-    # choices: 'lepton+jet', 'dilepton', 'taus_lepton+jet', 'taus_dilepton'
-    analysis_type: 'lepton+jet'
     using_real_data: false
+    # available choices '-': none, 'L': loose, 'M': medium, 'T': tight
+    b_tag_strength: 'M'
 
 
