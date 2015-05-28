@@ -1,0 +1,30 @@
+#
+#
+# This is an example (reference) config file to run with a batch_cluster.py.
+#
+# Optional: you may put your config entries for your submission maker here as
+# well.
+#
+#
+
+
+## batch_cluster.py depends on these. Serve as interfacing variables
+batch_cluster:
+    # Project's name
+    project_name: 'cluster_example'
+    # Submission-creation script in Python
+    submission_maker: 'create_submission.py'
+    # all produced files for a submission are in a new dir
+    outputs_a_dir: False
+    # all produced files for a submission are in the following dir
+    output_dir_name: 'submit'
+    # if outputs_dir: False, then use
+    output_files: ['test.dat', 'test.sh']
+    # an executable for each submission. Moved to destination before dir/files.
+    executable: 'test.sh'
+    # type of execution. Empty, i.e., '', is an option.
+    execute_as: 'bash'
+
+
+## Entries for a submission maker. The below section can be left blank if not
+## needed.

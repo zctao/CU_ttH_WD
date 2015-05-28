@@ -1,0 +1,57 @@
+#
+#
+# This is an example (reference) config file for setting up a batch cluster
+# submission directories, submitting, and/or creating a submitting script.
+#
+# Set an input package/project that needs submissions' creation:
+# ["Generic"]["projects_input_path"]
+#
+# Set project's config file that has a single submission maker script
+# ["Generic"]["submission_maker"]
+#
+#
+
+
+## Generic parameters
+Generic:
+    # Project's location/path. This is going to be set for a cluster run
+    project_input_path: 'Inputs/examples/batch_cluster/'
+    # Project's config file, has a common section (batch_cluster) for
+    # interfacing! File should be placed in projects_input_path
+    project_config: 'example.yaml'
+    # A file were the the output will be directed (with extras WRT console)
+    log_filename: 'batch_cluster.log'
+    # Console verbosity: all, warnings, errors
+    console_vebosity: 'all'
+
+
+execution_specifics:
+    # task_submission_type: 'runtime' - submit to cluster on the way
+    # task_submission_type: 'file' - create a file for multiple cluster submissions
+    task_submission_type: 'file'
+    multiple_submission_file: 'submit_all.run'
+
+
+submission_specifics:
+    # batch_executable: 'qsub' - PBS system, bsub - lxplus system
+    batch_executable: 'qsub'
+    # A maximum allowed number of jobs. The submissions' creator will stop when
+    # reaching this count. Adjust project's packet creator to account for this
+    allowed_maximum_jobs: 10000
+    # A path to look for a "default" job config src file
+    job_config_src_path: 'Utilities/module_warehouse/batch_cluster/'
+    # job_config_src - file in *job_config_src_path* with default batch job
+    # settings and REPLACE_ME values.
+    job_config_src_file: 'batch_PBS_default_config.job'
+    # Generic submission sublocation. Will run automatically as DIRNAME<iteration nr>
+    submission_dirnames: 'submission_'
+    place_submission_dirs_in: 'Outputs'
+    # A so-called walltime for cluster jobs. Conventions are usually different
+    # between different cluster systems
+    expected_run_duration: '20:00:00'
+    # Nr. of nodes per job
+    nodes: '1'
+    # Nr. of processors per node
+    processors_per_node: '1'
+    # Job memory requirement
+    memory: '1000mb'

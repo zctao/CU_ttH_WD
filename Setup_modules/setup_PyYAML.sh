@@ -3,7 +3,7 @@
 ###############################################################
 ###############################################################
 ##
-## Script checks and sets up YAML package and environment
+## Script checks and sets up PyYAML package and environment
 ##
 ###############################################################
 ###############################################################
@@ -12,7 +12,7 @@
 ## Script's parameters
 #####################
 
-PyYAML_PATH=PyYAML
+PyYAML_PATH=local
 PyYAML_LINK=http://pyyaml.org/download/pyyaml/PyYAML-3.11.tar.gz
 PyYAML_TAR=PyYAML-3.11.tar.gz
 START_DIR=${PWD}

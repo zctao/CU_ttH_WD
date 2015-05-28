@@ -27,7 +27,7 @@ if [ "${TASK}" = "analyzer" ]; then
 	. Setup_modules/setup_CMSSW.sh > ${LOG_FILENAME}
 	. Setup_modules/setup_packages_CMSSW.sh >> ${LOG_FILENAME}
 	
-	cp Utilities/analyzer/run_analyzer.sh .
+	cp Utilities/module_warehouse/analyzer/run_analyzer.sh .
 	
 	## Prepare GRID environment
 	voms-proxy-init -voms cms

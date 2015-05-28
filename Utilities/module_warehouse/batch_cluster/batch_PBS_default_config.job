@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#PBS -N <JOBNAME>
+#PBS -o <SUBMISSION>/job_std.out
+#PBS -e <SUBMISSION>/job_std.err
+# #PBS -M <INSERT EMAIL HERE>
+#PBS -r n
+#PBS -l walltime=<RUN_DURATION>
+#PBS -l nodes=<NR_OF_NODES>:ppn=<PROCESSORS_PER_NODE>
+#PBS -l pmem=<PROCESS_MEMORY>
+
+date
+hostname
+
+
+PATH_TO_SUBMISSION_DIR=<SUBMISSION>
+
+# module load python # modules to load if needed
+
+# Go to the designated working area
+cd ${TEMPDIR}
+
+# Once started, execute the following routine:
+sh ${PATH_TO_SUBMISSION_DIR}/<EXECUTE_THIS>
