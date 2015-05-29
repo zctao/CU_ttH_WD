@@ -10,14 +10,43 @@
 
 
 ## Script's parameters
-#####################
+######################
 
 PyYAML_PATH=local
 PyYAML_LINK=http://pyyaml.org/download/pyyaml/PyYAML-3.11.tar.gz
 PyYAML_TAR=PyYAML-3.11.tar.gz
 START_DIR=${PWD}
 
-#####################
+######################
+
+## Some functions
+#################
+
+## A downloaded source cleaner
+clean_PyYAML()
+{
+	cd ${START_DIR}
+	rm -f ${PyYAML_TAR}
+	rm -rf `echo ${PyYAML_TAR} | sed "s:.tar.gz::"`
+}
+
+
+## Links contents of lib64 dir if it is used instead of lib
+link_contents_lib64()
+{
+	cd ${START_DIR}
+	if [ ! -e ${PyYAML_PATH}/lib/*/site-packages/yaml ]; then
+		if [ -e ${PyYAML_PATH}/lib64/*/site-packages/yaml ]; then
+				mkdir -p ${PyYAML_PATH}/lib
+				cd ${PyYAML_PATH}/lib
+				for item in `ls ../lib64`; do
+						ln -s ../lib64/${item}
+				done
+		fi
+	fi
+}
+
+#################
 
 
 # Try out loading up yaml
@@ -45,23 +74,19 @@ python -c "import yaml" > /dev/null 2>&1
 # Check if python suceeded loading up yaml.
 # If failed, download and prepare yaml.
 if [ $? -ne 0 ]; then
-	## A downloaded source cleaner
-	clean_PyYAML()
-	{
-		cd ${START_DIR}
-		rm -f ${PyYAML_TAR}
-		rm -rf `echo ${PyYAML_TAR} | sed "s:.tar.gz::"`
-	}
 	trap clean_PyYAML EXIT
-
+	
 	wget ${PyYAML_LINK} 2>&1
 	tar -xf ${PyYAML_TAR}
 	cd `echo ${PyYAML_TAR} | sed "s:.tar.gz::"`
 	
-	python setup.py --without-libyaml install --prefix=${START_DIR}/${PyYAML_PATH}
-
-	cd ../
-	cd ${PyYAML_PATH}/lib/*/site-packages/
+	python setup.py --without-libyaml install \
+--prefix=${START_DIR}/${PyYAML_PATH}
+	
+	# if yaml is NOT inside lib
+	link_contents_lib64
+	
+	cd ${START_DIR}/${PyYAML_PATH}/lib/*/site-packages/
 	YAML_PATH=${PWD}
 	cd ${START_DIR}
 	
