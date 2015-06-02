@@ -17,8 +17,10 @@ PATH_TO_SUBMISSION_DIR=<SUBMISSION>
 
 # module load python # modules to load if needed
 
-# Go to the designated working area
-cd ${PBS_O_WORKDIR}
+# # Go to the designated working area. Can vary, better to do these maneuvers
+# # in a execution script.
+# cd ${PBS_O_WORKDIR}
 
 # Once started, execute the following routine:
-bash ${PATH_TO_SUBMISSION_DIR}/<EXECUTE_THIS>
+cd ${PATH_TO_SUBMISSION_DIR}
+bash <EXECUTE_THIS>
