@@ -244,6 +244,7 @@ class submission_maker:
 		target_dir = os.path.join(self.options['place_submission_dirs_in'],
 							self.options['submission_dirnames']) +\
 								self.options['project_name'] + str(it)
+		target_dir = os.path.join(os.getcwd(), target_dir)
 		
 		if not os.path.exists(target_dir):
 			os.makedirs(target_dir)

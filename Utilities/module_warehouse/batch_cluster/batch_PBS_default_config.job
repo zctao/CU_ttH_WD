@@ -18,7 +18,7 @@ PATH_TO_SUBMISSION_DIR=<SUBMISSION>
 # module load python # modules to load if needed
 
 # Go to the designated working area
-cd ${TEMPDIR}
+cd ${PBS_O_WORKDIR}
 
 # Once started, execute the following routine:
-sh ${PATH_TO_SUBMISSION_DIR}/<EXECUTE_THIS>
+bash ${PATH_TO_SUBMISSION_DIR}/<EXECUTE_THIS>
