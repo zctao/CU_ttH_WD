@@ -36,13 +36,20 @@ class example_packet_maker:
 			with open(input_config, 'r') as config_file:
 				config = yaml.load(config_file)
 			
-			self.options['project_name'] = config["batch_cluster"]["project_name"]
-			self.options['submission_maker'] = config["batch_cluster"]["submission_maker"]
-			self.options['outputs_a_dir'] = config["batch_cluster"]["outputs_a_dir"]
-			self.options['output_dir_name'] = config["batch_cluster"]["output_dir_name"]
-			self.options['output_files'] = config["batch_cluster"]["output_files"]
-			self.options['executable'] = config["batch_cluster"]["executable"]
-			self.options['execute_as'] = config["batch_cluster"]["execute_as"]
+			self.options['project_name'] = config["batch_cluster"][
+												  "project_name"]
+			self.options['submission_maker'] = config["batch_cluster"][
+													  "submission_maker"]
+			self.options['outputs_a_dir'] = config["batch_cluster"][
+												   "outputs_a_dir"]
+			self.options['output_dir_name'] = config["batch_cluster"][
+													 "output_dir_name"]
+			self.options['output_files'] = config["batch_cluster"][
+												  "output_files"]
+			self.options['executable'] = config["batch_cluster"][
+				"executable"]
+			self.options['execute_as'] = config["batch_cluster"][
+												"execute_as"]
 			
 			#Adjustments to names for local needs
 			self.options['submission_maker'] = re.sub('.py', '',\
@@ -96,7 +103,7 @@ class example_packet_maker:
 		"""Makes a submission packet."""
 		
 		#Example has only one iteration
-		if packet_nr == 0:
+		if int(packet_nr) == 0:
 			if self.options['outputs_a_dir']:
 				self.example_dir()
 			else:
