@@ -341,26 +341,35 @@ class submission_maker:
 		for i2 in xrange(0, len(job_config_src)):
 			# replace the dummy strings
 			job_config.append(re.sub('<SUBMISSION>',
-							target_dir,
-							job_config_src[i2]))
+									 target_dir,
+									 job_config_src[i2]))
 			job_config[i2] = re.sub('<JOBNAME>',
-						   self.options['project_name'] + str(job_nr),
-						   job_config[i2])
+									self.options['project_name'] + str(job_nr),
+									job_config[i2])
 			job_config[i2] = re.sub('<EXECUTE_THIS>',
-						   self.options['executable'],
-						   job_config[i2])
+									self.options['executable'],
+									job_config[i2])
 			job_config[i2] = re.sub('<RUN_DURATION>',
-						   self.options['expected_run_duration'],
-						   job_config[i2])
+									self.options['expected_run_duration'],
+									job_config[i2])
 			job_config[i2] = re.sub('<NR_OF_NODES>',
-						   self.options['job_nodes'],
-						   job_config[i2])
+									self.options['job_nodes'],
+									job_config[i2])
 			job_config[i2] = re.sub('<PROCESSORS_PER_NODE>',
-						   self.options['processors_per_node'],
-						   job_config[i2])
+									self.options['processors_per_node'],
+									job_config[i2])
 			job_config[i2] = re.sub('<PROCESS_MEMORY>',
-						   self.options['job_memory'],
-						   job_config[i2])
+									self.options['job_memory'],
+									job_config[i2])
+			
+			if self.options['execute_as'] != '':
+				job_config[i2] = re.sub('<EXECUTE_AS>',
+										self.options['execute_as'] + ' ',
+										job_config[i2])
+			else:
+				job_config[i2] = re.sub('<EXECUTE_AS>',
+										'',
+										job_config[i2])
 			
 		return job_config
 

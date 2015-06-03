@@ -23,4 +23,4 @@ PATH_TO_SUBMISSION_DIR=<SUBMISSION>
 
 # Once started, execute the following routine:
 cd ${PATH_TO_SUBMISSION_DIR}
-bash <EXECUTE_THIS>
+<EXECUTE_AS><EXECUTE_THIS>
