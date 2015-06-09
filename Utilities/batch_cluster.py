@@ -186,8 +186,8 @@ class submission_maker:
 		self.logger.addHandler(ch)
 		
 		if log_existed:
-			self.logger.warning('A log file ' + log_filename +\
-				' already exists. Appending.')
+			self.logger.warning('A log file %s already exists. Appending.' % \
+								log_filename)
 		
 		#is_logger_initialized = True
 	
@@ -232,7 +232,7 @@ class submission_maker:
 		
 		if status != packet_maker.EXIT_SUCCESS:
 			if status == packet_maker.EXIT_CYCLE_ENDED:
-				self.logger.info('A last job has been reached.' +\
+				self.logger.info('A last job has been reached.' + \
 					' Job number: ' + str(it))
 			else:
 				self.logger.error('An error in ' +\
@@ -242,9 +242,10 @@ class submission_maker:
 		
 		## Create a path string for a designated submission
 		target_dir = os.path.join(self.options['place_submission_dirs_in'],
-							self.options['submission_dirnames']) +\
-								self.options['project_name'] + str(it)
+								  self.options['submission_dirnames']) + \
+									self.options['project_name'] + str(it)
 		target_dir = os.path.join(os.getcwd(), target_dir)
+		self.logger.info(target_dir)
 		
 		if not os.path.exists(target_dir):
 			os.makedirs(target_dir)
@@ -257,13 +258,13 @@ class submission_maker:
 				src_file = os.path.join(self.options['project_input_path'],
 										item)
 				if not os.path.isfile(src_file):
-					raise RuntimeError, 'File for submission ' +\
-						src_file + ' is missing'
+					raise RuntimeError, 'File for submission %s is missing' % \
+						src_file
 				shutil.move(src_file, os.path.join(target_dir, item))
 		
 		## Put an execution script for a cluster system in a designated loc
 		job_runner = os.path.join(target_dir,
-								  self.options['project_name'] + str(it) +\
+								  self.options['project_name'] + str(it) + \
 									  '.job')
 		self.__put_job_runner(target_dir, it, job_runner)
 		
@@ -274,7 +275,7 @@ class submission_maker:
 			
 		elif self.options['submit_type'] == "file":
 			with open(self.options['submit_all_file'], "a") as sumbmit_all_file:
-				sumbmit_all_file.write(self.options['batch_executable'] +\
+				sumbmit_all_file.write(self.options['batch_executable'] + \
 					' ' + job_runner + '\n')
 		
 		return status
@@ -290,7 +291,7 @@ class submission_maker:
 			self.__load_job_config_src()
 		
 		execution_file = os.path.join(target_dir,
-												self.options['executable'])
+									  self.options['executable'])
 		if not os.path.exists(execution_file):
 			self.logger.error("Can't find %s" % execution_file)
 			sys.exit(1)
@@ -298,9 +299,9 @@ class submission_maker:
 		
 		if self.options['submit_type'] == "file":
 			if os.path.lexists(self.options['submit_all_file']):
-				self.logger.warning('A submit file ' +\
-					self.options['submit_all_file'] +\
-						' already exists. Appending.')
+				self.logger.warning(
+					'A submit file %s already exists. Appending.' % \
+						self.options['submit_all_file'])
 		
 		### Create specialized files for jobs. Submit jobs
 		job_config = self.__make_substitutes(target_dir,
@@ -338,38 +339,30 @@ class submission_maker:
 		job_config = []
 		
 		## Loop over the file/strings in the memory
-		for i2 in xrange(0, len(job_config_src)):
+		for read_string in job_config_src:
 			# replace the dummy strings
-			job_config.append(re.sub('<SUBMISSION>',
-									 target_dir,
-									 job_config_src[i2]))
-			job_config[i2] = re.sub('<JOBNAME>',
-									self.options['project_name'] + str(job_nr),
-									job_config[i2])
-			job_config[i2] = re.sub('<EXECUTE_THIS>',
-									self.options['executable'],
-									job_config[i2])
-			job_config[i2] = re.sub('<RUN_DURATION>',
-									self.options['expected_run_duration'],
-									job_config[i2])
-			job_config[i2] = re.sub('<NR_OF_NODES>',
-									self.options['job_nodes'],
-									job_config[i2])
-			job_config[i2] = re.sub('<PROCESSORS_PER_NODE>',
-									self.options['processors_per_node'],
-									job_config[i2])
-			job_config[i2] = re.sub('<PROCESS_MEMORY>',
-									self.options['job_memory'],
-									job_config[i2])
-			
-			if self.options['execute_as'] != '':
-				job_config[i2] = re.sub('<EXECUTE_AS>',
-										self.options['execute_as'] + ' ',
-										job_config[i2])
-			else:
-				job_config[i2] = re.sub('<EXECUTE_AS>',
-										'',
-										job_config[i2])
+			read_string = re.sub('<SUBMISSION>',
+								 target_dir,
+								 read_string)
+			read_string = re.sub('<JOBNAME>',
+								 self.options['project_name'] + str(job_nr),
+								 read_string)
+			read_string = re.sub('<EXECUTE_THIS>',
+								 self.options['executable'],
+								 read_string)
+			read_string = re.sub('<RUN_DURATION>',
+								 self.options['expected_run_duration'],
+								 read_string)
+			read_string = re.sub('<NR_OF_NODES>',
+								 self.options['job_nodes'],
+								 read_string)
+			read_string = re.sub('<PROCESSORS_PER_NODE>',
+								 self.options['processors_per_node'],
+								 read_string)
+			read_string = re.sub('<PROCESS_MEMORY>',
+								 self.options['job_memory'],
+								 read_string)
+			job_config.append(read_string)
 			
 		return job_config
 
