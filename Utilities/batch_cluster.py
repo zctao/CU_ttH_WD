@@ -186,8 +186,8 @@ class submission_maker:
 		self.logger.addHandler(ch)
 		
 		if log_existed:
-			self.logger.warning('A log file %s already exists. Appending.' % \
-								log_filename)
+			self.logger.warning('A log file {0} already exists. Appending.'.format(
+									log_filename))
 		
 		#is_logger_initialized = True
 	
@@ -247,19 +247,18 @@ class submission_maker:
 		target_dir = os.path.join(os.getcwd(), target_dir)
 		self.logger.info(target_dir)
 		
-		if not os.path.exists(target_dir):
-			os.makedirs(target_dir)
-		
 		## Move produced submission packet to a designated location
 		if self.options['outputs_a_dir']:
 			shutil.move(src_dir, target_dir)
 		else:
+			if not os.path.exists(target_dir):
+				os.makedirs(target_dir)
 			for item in self.options['output_files']:
 				src_file = os.path.join(self.options['project_input_path'],
 										item)
 				if not os.path.isfile(src_file):
-					raise RuntimeError, 'File for submission %s is missing' % \
-						src_file
+					raise RuntimeError, 'File for submission {0} is missing'.\
+						format(src_file)
 				shutil.move(src_file, os.path.join(target_dir, item))
 		
 		## Put an execution script for a cluster system in a designated loc
@@ -293,15 +292,15 @@ class submission_maker:
 		execution_file = os.path.join(target_dir,
 									  self.options['executable'])
 		if not os.path.exists(execution_file):
-			self.logger.error("Can't find %s" % execution_file)
+			self.logger.error('Can\'t find {0}'.format(execution_file))
 			sys.exit(1)
 			
 		
-		if self.options['submit_type'] == "file":
+		if self.options['submit_type'] == 'file':
 			if os.path.lexists(self.options['submit_all_file']):
 				self.logger.warning(
-					'A submit file %s already exists. Appending.' % \
-						self.options['submit_all_file'])
+					'A submit file {0} already exists. Appending.'.format(
+						self.options['submit_all_file']))
 		
 		### Create specialized files for jobs. Submit jobs
 		job_config = self.__make_substitutes(target_dir,
@@ -311,7 +310,7 @@ class submission_maker:
 		out_file_job_config = open(job_runner ,"w")
 			
 		for item in job_config:
-			out_file_job_config.write("%s\n" % item)
+			out_file_job_config.write("{0}\n".format(item))
 				
 		out_file_job_config.close()
 	
@@ -324,7 +323,7 @@ class submission_maker:
 			self.options['job_config_src_file'])
 		
 		if not os.path.exists(job_config_src_file):
-			self.logger.error("Can't find %s" % job_config_src_file)
+			self.logger.error('Can\'t find {0}'.format(job_config_src_file))
 			sys.exit(1)
 		
 		with open(job_config_src_file) as inputfile:
