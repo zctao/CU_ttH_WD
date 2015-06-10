@@ -28,6 +28,7 @@ class submission_maker:
 	options = {'my_name': 'batch_cluster',
 		'config_file': 'Configs/batch_cluster_reference.yaml',
 		'log_filename': 'batch_cluster.log',
+		'log_vebosity': 'errors',
 		'console_vebosity': 'errors',
 		'submit_type': 'runtime',
 		'submit_all_file': 'submit_all.run',
@@ -82,6 +83,8 @@ class submission_maker:
 				"Generic"]["project_config"]
 			self.options['log_filename'] = config[
 				"Generic"]["log_filename"]
+			self.options['log_vebosity'] = config[
+				"Generic"]["log_vebosity"]
 			self.options['console_vebosity'] = config[
 				"Generic"]["console_vebosity"]
 			
@@ -162,9 +165,15 @@ class submission_maker:
 		# logging class format for both console and file outputs
 		logging_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 		
-		logging.basicConfig(format=logging_format,\
-			filename=log_filename,\
-			level=logging.INFO)
+		if self.options['console_vebosity'] == 'debug' or \
+		   self.options['log_vebosity'] == 'debug':
+			logging.basicConfig(format=logging_format,
+								filename=log_filename,
+								level=logging.DEBUG)
+		else:
+			logging.basicConfig(format=logging_format,
+								filename=log_filename,
+								level=logging.INFO)
 		self.logger = logging.getLogger(self.options['my_name'])
 		
 		# console handler
@@ -173,6 +182,8 @@ class submission_maker:
 			ch.setLevel(logging.ERROR)
 		elif self.options['console_vebosity'] == 'warnings':
 			ch.setLevel(logging.WARNING)
+		elif self.options['console_vebosity'] == 'debug':
+			ch.setLevel(logging.DEBUG)
 		else:
 			ch.setLevel(logging.INFO)
 		

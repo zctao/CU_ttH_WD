@@ -21,8 +21,11 @@ Generic:
     project_config: 'example.yaml'
     # A file were the the output will be directed (with extras WRT console)
     log_filename: 'batch_cluster.log'
-    # Console verbosity: all, warnings, errors
-    console_vebosity: 'all'
+    # log file verbosity: info, debug. Unrecognized = info.
+    # Is lower than console's level. Lowered if needed.
+    log_vebosity: 'info'
+    # Console verbosity: info, debug, warnings, errors. Unrecognized = info
+    console_vebosity: 'info'
 
 
 execution_specifics:
