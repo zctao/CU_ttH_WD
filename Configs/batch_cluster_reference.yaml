@@ -41,6 +41,11 @@ submission_specifics:
     # A maximum allowed number of jobs. The submissions' creator will stop when
     # reaching this count. Adjust project's packet creator to account for this
     allowed_maximum_jobs: 10000
+    # Number of the first job:
+    first_job_nr: 0
+    # Number of the last job:
+    # Is ignored if nr > (first_job_nr + allowed_maximum_jobs)
+    last_job_nr: 10000
     # A path to look for a "default" job config src file
     job_config_src_path: 'Utilities/module_warehouse/batch_cluster/'
     # job_config_src - file in *job_config_src_path* with default batch job

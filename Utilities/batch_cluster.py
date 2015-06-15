@@ -34,6 +34,8 @@ class submission_maker:
 		'submit_all_file': 'submit_all.run',
 		'batch_executable': 'qsub',
 		'allowed_maximum_jobs': 10000,
+		'first_job_nr': 0,
+		'last_job_nr': 10000,
 		'job_config_src_path': 'Utilities/module_warehouse/batch_cluster/',
 		'job_config_src_file': 'batch_PBS_default_config.job',
 		'submission_dirnames': 'submission_',
@@ -92,6 +94,10 @@ class submission_maker:
 				"submission_specifics"]["batch_executable"]
 			self.options['allowed_maximum_jobs'] = config[
 				"submission_specifics"]["allowed_maximum_jobs"]
+			self.options['first_job_nr'] = config[
+				"submission_specifics"]["first_job_nr"]
+			self.options['last_job_nr'] = config[
+				"submission_specifics"]["last_job_nr"]
 			self.options['job_config_src_path'] = config[
 				"submission_specifics"]["job_config_src_path"]
 			self.options['job_config_src_file'] = config[
@@ -115,8 +121,8 @@ class submission_maker:
 				"execution_specifics"]["multiple_submission_file"]
 			
 		else:
-			raise RuntimeError, 'A config file ' + input_config +\
-				' does not exist.'
+			raise RuntimeError, 'A config file {0} does not exist.'.format(
+				input_config)
 	
 	
 	def load_yaml_config_dependent(self, input_config=None):
@@ -145,10 +151,12 @@ class submission_maker:
 			#Adjustments to names for local needs
 			self.options['submission_maker'] = re.sub('.py', '',\
 										self.options['submission_maker'])
+			if not self.options['execute_as'] == './':
+				self.options['execute_as'] += ' '
 			
 		else:
-			raise RuntimeError, 'A config file ' + input_config +\
-				' does not exist.'
+			raise RuntimeError, 'A config file {0} does not exist.'.format(
+				input_config)
 	
 	
 	def initialize_logger(self, log_filename):
@@ -207,9 +215,9 @@ class submission_maker:
 		"""Makes submissions based on provided config settings. Each
 		submission packet is provided by an external code."""
 		
-		if not os.path.isfile(os.path.join(self.options['project_input_path'],
-										   self.options['submission_maker'] +\
-											   '.py')):
+		if not os.path.isfile(os.path.join(
+						self.options['project_input_path'],
+						'{0}.py'.format(self.options['submission_maker']))):
 			raise RuntimeError, 'Submission maker does not exist!'
 		
 		## Dynamically load a provided submission-packet maker
@@ -221,12 +229,28 @@ class submission_maker:
 		src_dir = os.path.join(self.options['project_input_path'],
 							   self.options['output_dir_name'])
 		
+		if self.options['submit_type'] == 'file':
+			if os.path.lexists(self.options['submit_all_file']):
+				self.logger.warning(
+					'A submit file {0} already exists. Appending.'.format(
+						self.options['submit_all_file']))
+		
 		## Make and move submissions packets to their execution place
-		for it in xrange(0, self.options['allowed_maximum_jobs']):
-			if it == self.options['allowed_maximum_jobs']:
-				raise RuntimeError, 'Maximum allowed number of jobs' +\
-					' reached. Limit: ' +\
-						str(self.options['allowed_maximum_jobs'])
+		first = self.options['first_job_nr']
+		last = self.options['last_job_nr'] + 1
+		if last > (first + self.options['allowed_maximum_jobs']):
+			last = first + self.options['allowed_maximum_jobs']
+			self.logger.warning('Last job exceeds the maximum allowed' + \
+				' number of jobs ({0}).\nNew last job: {1}.'.format(
+					self.options['allowed_maximum_jobs'],
+					first + self.options['allowed_maximum_jobs'] - 1))
+		
+		for it in xrange(first, last):
+			if it == (last - 1):
+				if it == (first + self.options['allowed_maximum_jobs'] - 1):
+					self.logger.warning('Allowed maximum number of jobs' + \
+						' reached: {0}.'.format(
+							self.options['allowed_maximum_jobs']))
 			
 			status = self.__make_submission_packet(submission, src_dir, it)
 			
@@ -243,18 +267,19 @@ class submission_maker:
 		
 		if status != packet_maker.EXIT_SUCCESS:
 			if status == packet_maker.EXIT_CYCLE_ENDED:
-				self.logger.info('A last job has been reached.' + \
-					' Job number: ' + str(it))
+				self.logger.info('A last job has been reached. ' + \
+					'Job number: {0}'.format(it))
 			else:
-				self.logger.error('An error in ' +\
-					self.options['submission_maker'] +\
-						' occured. Error code ' + str(status))
+				self.logger.error('An error in {0} occured. Error code {1}'.\
+					format(self.options['submission_maker'], status))
 				return status
 		
 		## Create a path string for a designated submission
 		target_dir = os.path.join(self.options['place_submission_dirs_in'],
-								  self.options['submission_dirnames']) + \
-									self.options['project_name'] + str(it)
+								  '{0}{1}{2}'.format(
+									self.options['submission_dirnames'],
+									self.options['project_name'],
+									it))
 		target_dir = os.path.join(os.getcwd(), target_dir)
 		self.logger.info(target_dir)
 		
@@ -274,8 +299,8 @@ class submission_maker:
 		
 		## Put an execution script for a cluster system in a designated loc
 		job_runner = os.path.join(target_dir,
-								  self.options['project_name'] + str(it) + \
-									  '.job')
+								  '{0}{1}.job'.format(
+									  self.options['project_name'], it))
 		self.__put_job_runner(target_dir, it, job_runner)
 		
 		## Submit created jobs
@@ -285,8 +310,8 @@ class submission_maker:
 			
 		elif self.options['submit_type'] == "file":
 			with open(self.options['submit_all_file'], "a") as sumbmit_all_file:
-				sumbmit_all_file.write(self.options['batch_executable'] + \
-					' ' + job_runner + '\n')
+				sumbmit_all_file.write('{0} {1}\n'.format(
+					self.options['batch_executable'], job_runner))
 		
 		return status
 	
@@ -305,13 +330,6 @@ class submission_maker:
 		if not os.path.exists(execution_file):
 			self.logger.error('Can\'t find {0}'.format(execution_file))
 			sys.exit(1)
-			
-		
-		if self.options['submit_type'] == 'file':
-			if os.path.lexists(self.options['submit_all_file']):
-				self.logger.warning(
-					'A submit file {0} already exists. Appending.'.format(
-						self.options['submit_all_file']))
 		
 		### Create specialized files for jobs. Submit jobs
 		job_config = self.__make_substitutes(target_dir,
@@ -356,6 +374,9 @@ class submission_maker:
 								 read_string)
 			read_string = re.sub('<JOBNAME>',
 								 self.options['project_name'] + str(job_nr),
+								 read_string)
+			read_string = re.sub('<EXECUTE_AS>',
+								 self.options['execute_as'],
 								 read_string)
 			read_string = re.sub('<EXECUTE_THIS>',
 								 self.options['executable'],
