@@ -38,6 +38,8 @@ if command -v scram > /dev/null 2>&1; then
 			scram project ${CMSSW_VER_CHOICE}
 			cd ${CMSSW_VER_CHOICE}/src/
 			cmsenv
+			# This one needed to later use git cms-addpkg
+			git cms-init
 			cd ${START_DIR}
 		fi
 		
