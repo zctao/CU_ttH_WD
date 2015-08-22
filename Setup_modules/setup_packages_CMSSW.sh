@@ -39,6 +39,7 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		echo "${CMSSW_BASE}/src/Analyzers was set. Updating."
 		cd ${CMSSW_BASE}/src/Analyzers
 		git pull
+		
 		cd ${CMSSW_BASE}/src
 		
 		MAKE_CLEAN_BUILD=True
@@ -60,6 +61,7 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		echo "${CMSSW_BASE}/src/MiniAOD is set. Updating."
 		cd ${CMSSW_BASE}/src/MiniAOD
 		git pull
+		
 		cd ${CMSSW_BASE}/src
 		
 		MAKE_CLEAN_BUILD=True
@@ -81,11 +83,43 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 		echo "${CMSSW_BASE}/src/BoostedTTH is set. Updating."
 		cd ${CMSSW_BASE}/src/BoostedTTH
 		git pull
+		ln -s $CMSSW_RELEASE_BASE/src/RecoJets/JetProducers/plugins/VirtualJetProducer.h \
+BoostedProducer/plugins/VirtualJetProducer.h
+		ln -s $CMSSW_RELEASE_BASE/src/RecoJets/JetProducers/plugins/VirtualJetProducer.cc \
+BoostedProducer/plugins/VirtualJetProducer.cc
+		
 		cd ${CMSSW_BASE}/src
 		
 		MAKE_CLEAN_BUILD=True
 	else
 		echo "ERROR: ${CMSSW_BASE}/src/BoostedTTH is NOT set." 1>&2
+	fi
+	
+	
+	#######################
+	## BoostedTTH additions
+	#######################
+
+	# Set up BoostedTTH if it is missing
+	if [ ! -d "${CMSSW_BASE}/src/PhysicsTools/JetMCAlgos" ]; then
+		git cms-addpkg PhysicsTools/JetMCAlgos
+	fi  
+
+	if [ -d "${CMSSW_BASE}/src/PhysicsTools/JetMCAlgos" ]; then
+		echo "${CMSSW_BASE}/src/PhysicsTools/JetMCAlgos is set. Updating."
+		cd ${CMSSW_BASE}/src/PhysicsTools/JetMCAlgos
+		git pull
+		
+		echo "Issuing BoostedTTH hacks"
+		wget https://twiki.cern.ch/twiki/pub/CMSPublic/GenHFHadronMatcher/GenHFHadronMatcher.cc
+		mv GenHFHadronMatcher.cc plugins/
+
+		cd ${CMSSW_BASE}/src
+		git cms-merge-topic gkasieczka:htt-v2-74X
+
+		MAKE_CLEAN_BUILD=True
+	else
+		echo "ERROR: ${CMSSW_BASE}/src/PhysicsTools/JetMCAlgos is NOT set." 1>&2
 	fi
 	
 	
