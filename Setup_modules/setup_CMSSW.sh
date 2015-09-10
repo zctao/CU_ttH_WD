@@ -12,8 +12,8 @@
 ## Script's parameters
 ######################
 
-SCRAM_ARCH_VER_CHOICE=slc6_amd64_gcc491
-CMSSW_VER_CHOICE=CMSSW_7_4_7
+SCRAM_ARCH_VER_CHOICE=slc6_amd64_gcc481
+CMSSW_VER_CHOICE=CMSSW_7_2_5
 START_DIR=${PWD}
 
 

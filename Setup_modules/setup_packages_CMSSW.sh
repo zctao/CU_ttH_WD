@@ -36,10 +36,14 @@ if [ "${CMSSW_VERSION}" = "${CMSSW_VER_CHOICE}" ] && [ -d "${CMSSW_BASE}" ]; the
 	fi
 
 	if [ -d "${CMSSW_BASE}/src/Analyzers" ]; then
+
 		echo "${CMSSW_BASE}/src/Analyzers was set. Updating."
 		cd ${CMSSW_BASE}/src/Analyzers
 		git pull
-		
+
+		# Switch to branch CMSSW_72X
+		git checkout CMSSW_72X
+
 		cd ${CMSSW_BASE}/src
 		
 		MAKE_CLEAN_BUILD=True
