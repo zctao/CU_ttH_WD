@@ -3,3 +3,4 @@ CMSSW_*
 Outputs/*
 Inputs/*
 *.log
+run_analyzer.sh
